@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Campus | Student Attendance</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">🎓</div><h2>Smart Campus</h2><p>Student Attendance System</p></div>
+    <nav>
+      <button class="nav-item active" data-view="dashboard">▦ <span>Dashboard</span></button>
+      <button class="nav-item" data-view="students">♙ <span>Students</span></button>
+      <button class="nav-item" data-view="qr">▦ <span>Generate QR</span></button>
+      <button class="nav-item" data-view="scan">▣ <span>Scan Attendance</span></button>
+      <button class="nav-item" data-view="records">▤ <span>Attendance Records</span></button>
+      <button class="nav-item" data-view="reports">▥ <span>Reports</span></button>
+    </nav>
+    <div class="sidebar-note">Smart Education<br><b>Brighter Future.</b></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><p class="eyebrow">SMART CAMPUS MANAGEMENT</p><h1 id="pageTitle">Dashboard</h1></div>
+      <div class="profile"><span class="avatar">A</span><div><b>Administrator</b><small>Campus Admin</small></div></div>
+    </header>
+
+    <section class="view active" id="view-dashboard">
+      <div class="welcome"><div><h2>Welcome, Admin! 👋</h2><p>Here is your campus attendance overview.</p></div><span class="today" id="todayLabel"></span></div>
+      <div class="stats">
+        <article class="stat blue"><div class="stat-symbol">♙</div><div><p>Total Students</p><strong id="totalStudents">0</strong></div></article>
+        <article class="stat green"><div class="stat-symbol">✓</div><div><p>Present Today</p><strong id="presentToday">0</strong></div></article>
+        <article class="stat red"><div class="stat-symbol">×</div><div><p>Absent Today</p><strong id="absentToday">0</strong></div></article>
+        <article class="stat purple"><div class="stat-symbol">%</div><div><p>Attendance Rate</p><strong id="rateToday">0%</strong></div></article>
+      </div>
+      <div class="dashboard-grid">
+        <article class="card overview"><div class="card-heading"><h3>Attendance Overview</h3><span class="legend">● Demo week</span></div><div class="chart" id="chart"><div class="chart-line"><i style="height:48%"></i><i style="height:66%"></i><i style="height:56%"></i><i style="height:73%"></i><i style="height:68%"></i><i style="height:84%"></i><i style="height:91%"></i></div><div class="chart-days"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></div></article>
+        <article class="card quick"><div class="card-heading"><h3>Quick Actions</h3></div><button class="action blue-action" data-goto="students">＋ Add Student</button><button class="action green-action" data-goto="qr">▦ Generate QR</button><button class="action purple-action" data-goto="scan">▣ Scan Attendance</button><button class="action orange-action" data-goto="reports">▥ View Reports</button></article>
+        <article class="card top-class"><div class="card-heading"><h3>Project Preview</h3></div><div class="trophy">🏆</div><h2>Smart Campus</h2><p>QR-based attendance demo</p><span class="pill">HTML • CSS • JavaScript</span></article>
+      </div>
+      <article class="card recent"><div class="card-heading"><h3>Recent Attendance Records</h3><button class="text-button" data-goto="records">View all →</button></div><div class="table-wrap"><table><thead><tr><th>Student</th><th>Roll No.</th><th>Department</th><th>Status</th><th>Time</th></tr></thead><tbody id="recentRows"></tbody></table></div></article>
+    </section>
+
+    <section class="view" id="view-students">
+      <div class="section-intro"><div><h2>Student Management</h2><p>Add and manage students for your campus.</p></div></div>
+      <article class="card form-card"><h3>Add New Student</h3><form id="studentForm" class="form-grid">
+        <label>Full name<input id="studentName" required placeholder="e.g. Rahul Sharma"></label>
+        <label>Roll number<input id="rollNo" required placeholder="e.g. IT023"></label>
+        <label>Department<select id="department" required><option value="">Select department</option><option>IT</option><option>CSE</option><option>Mechanical</option><option>Electrical</option><option>Electronics</option><option>Civil</option></select></label>
+        <label>Year<select id="year" required><option value="">Select year</option><option>First Year</option><option>Second Year</option><option>Third Year</option></select></label>
+        <button class="primary-btn" type="submit">Save Student</button>
+      </form></article>
+      <article class="card"><div class="card-heading"><h3>Registered Students</h3><input class="search" id="studentSearch" placeholder="Search students..."></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Roll No.</th><th>Department</th><th>Year</th><th>Action</th></tr></thead><tbody id="studentRows"></tbody></table></div></article>
+    </section>
+
+    <section class="view" id="view-qr">
+      <div class="section-intro"><div><h2>Generate Student QR</h2><p>Select a registered student to create a QR code for this demo.</p></div></div>
+      <article class="card form-card"><label class="block-label">Choose student<select id="qrStudent"></select></label><button class="primary-btn" id="makeQr">Generate QR Code</button><div id="qrResult" class="qr-result"><p>Select a student and generate their QR code.</p></div><p class="muted">Demo QR codes contain a student roll number. Do not use this demo for sensitive or official attendance records.</p></article>
+    </section>
+
+    <section class="view" id="view-scan">
+      <div class="section-intro"><div><h2>Scan Attendance</h2><p>Use a device camera to scan a student QR code.</p></div></div>
+      <article class="card scanner-card"><div id="reader"></div><div class="scanner-actions"><button class="primary-btn" id="startScan">Start Camera</button><button class="secondary-btn" id="stopScan">Stop Camera</button></div><p id="scanMessage" class="muted">Camera permission may be required. QR scanning works on HTTPS or localhost.</p></article>
+      <article class="card"><h3>Manual Attendance (Demo)</h3><p class="muted">If camera scanning is unavailable, mark a student present here.</p><div class="inline-form"><select id="manualStudent"></select><button class="primary-btn" id="manualMark">Mark Present</button></div></article>
+    </section>
+
+    <section class="view" id="view-records">
+      <div class="section-intro"><div><h2>Attendance Records</h2><p>View attendance entries saved in this browser.</p></div><button class="secondary-btn" id="exportCsv">Export CSV</button></div>
+      <article class="card"><div class="card-heading"><h3>All Records</h3><input class="search" id="recordSearch" placeholder="Search records..."></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Student</th><th>Roll No.</th><th>Department</th><th>Status</th><th>Time</th></tr></thead><tbody id="recordRows"></tbody></table></div></article>
+    </section>
+
+    <section class="view" id="view-reports">
+      <div class="section-intro"><div><h2>Attendance Reports</h2><p>Simple report based on records stored in this browser.</p></div><button class="secondary-btn" id="reportCsv">Download Report CSV</button></div>
+      <div class="stats report-stats"><article class="stat blue"><div><p>Registered Students</p><strong id="reportStudents">0</strong></div></article><article class="stat green"><div><p>Attendance Entries</p><strong id="reportEntries">0</strong></div></article><article class="stat purple"><div><p>Unique Dates</p><strong id="reportDates">0</strong></div></article></div>
+      <article class="card"><h3>Attendance by Department</h3><div id="departmentReport" class="department-report"></div></article>
+    </section>
+    <footer>Smart Campus Attendance Demo <span>Built with HTML, CSS & JavaScript</span></footer>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script src="js/app.js"></script>
+</body>
+</html>
